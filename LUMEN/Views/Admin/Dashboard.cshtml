@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var userCount = ViewBag.UserCount ?? 0;
+    var subjectCount = ViewBag.SubjectCount ?? 0;
+    var lessonCount = ViewBag.LessonCount ?? 0;
+    var quizCount = ViewBag.QuizCount ?? 0;
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>System overview and management</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card terracotta">
+                <h6><i class="bi bi-people-fill"></i> Total Users</h6>
+                <p class="display-5">@userCount</p>
+                <small style="color: var(--olive);"><i class="bi bi-arrow-up"></i> Active</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card olive">
+                <h6><i class="bi bi-book-fill"></i> Subjects</h6>
+                <p class="display-5">@subjectCount</p>
+                <small style="color: var(--olive);"><i class="bi bi-check-circle"></i> Published</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card terracotta">
+                <h6><i class="bi bi-journal-text"></i> Lessons</h6>
+                <p class="display-5">@lessonCount</p>
+                <small style="color: var(--olive);">Total Content</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card olive">
+                <h6><i class="bi bi-question-circle-fill"></i> Quizzes</h6>
+                <p class="display-5">@quizCount</p>
+                <small style="color: var(--olive);">Available</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-3">
+            <div class="card p-4">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;">User Growth (Last 7 Days)</h5>
+                <canvas id="userGrowthChart" height="100"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="card p-4">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;">Category Distribution</h5>
+                <canvas id="categoryChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-lg-6 mb-3">
+            <div class="card p-4">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-lightning-fill" style="color: var(--terracotta);"></i> Quick Actions</h5>
+                <div class="d-grid gap-2">
+                    <a asp-controller="Subjects" asp-action="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add New Subject
+                    </a>
+                    <a asp-controller="UserManagement" asp-action="Index" class="btn btn-olive">
+                        <i class="bi bi-people"></i> Manage Users
+                    </a>
+                    <a asp-controller="Announcements" asp-action="Create" class="btn btn-secondary">
+                        <i class="bi bi-megaphone"></i> Create Announcement
+                    </a>
+                    <a asp-controller="AuditLog" asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-shield-lock"></i> View Audit Log
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card p-4">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-graph-up" style="color: var(--olive);"></i> System Health</h5>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Database Status</span>
+                        <strong style="color: var(--olive);">Healthy</strong>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar olive" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Storage Used</span>
+                        <strong>24%</strong>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 24%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Active Sessions</span>
+                        <strong>@userCount</strong>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar olive" style="width: @(userCount * 10)%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        // User Growth Chart
+        new Chart(document.getElementById('userGrowthChart'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [1, 2, 1, 3, 2, 4, @userCount],
+                    borderColor: '#C65D3E',
+                    backgroundColor: 'rgba(198, 93, 62, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#F0E8D5' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Category Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Coding', 'Languages'],
+                datasets: [{
+                    data: [15, 15],
+                    backgroundColor: ['#C65D3E', '#7A8B5C'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+}

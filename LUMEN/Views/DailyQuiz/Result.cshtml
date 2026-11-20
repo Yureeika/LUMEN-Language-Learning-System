@@ -1,0 +1,12 @@
+﻿@model QuizAttempt
+@{ ViewData["Title"] = "Result"; }
+<div class="container mt-4">
+    <h1>Quiz Result</h1>
+    <div class="card mt-4">
+        <div class="card-body text-center">
+            @if (Model.Passed) { <div class="alert alert-success"><h2>Passed!</h2></div> } else { <div class="alert alert-danger"><h2>Failed</h2></div> }
+            <h3>Score: @Model.Score / @Model.TotalPoints (@((Model.Score * 100 / Model.TotalPoints))%)</h3>
+            <a asp-action="Index" class="btn btn-primary mt-3">Back to Quizzes</a>
+        </div>
+    </div>
+</div>

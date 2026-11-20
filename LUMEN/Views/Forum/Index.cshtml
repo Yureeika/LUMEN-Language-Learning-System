@@ -1,0 +1,122 @@
+﻿@model IEnumerable<LUMEN.Models.DiscussionThread>
+
+@{
+    ViewData["Title"] = "Forum";
+}
+
+<div class="container-fluid mt-4">
+
+    <div class="page-header d-flex justify-content-between align-items-center">
+
+        <div>
+            <h1>
+                <i class="bi bi-chat-square-text"></i>
+                Forum
+            </h1>
+
+            <p>
+                Discuss subjects, lessons, and learning topics with other students.
+            </p>
+        </div>
+
+        <a asp-controller="Forum"
+           asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-lg"></i>
+
+            New Discussion
+
+        </a>
+
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+
+            <div class="list-group list-group-flush">
+
+                @foreach (var thread in Model)
+                {
+                    <a asp-controller="Forum"
+                       asp-action="Thread"
+                       asp-route-id="@thread.Id"
+                       class="list-group-item list-group-item-action p-4">
+
+                        <div class="d-flex justify-content-between align-items-start">
+
+                            <div>
+
+                                <h5 class="mb-1">
+                                    @thread.Title
+                                </h5>
+
+                                <p class="mb-1 text-muted">
+
+                                    Started by
+                                    @thread.User.FirstName
+                                    @thread.User.LastName
+
+                                </p>
+
+                            </div>
+
+
+                            <span class="badge bg-secondary">
+
+                                @(thread.Posts?.Count ?? 0)
+
+                                @(thread.Posts?.Count == 1 ? "post" : "posts")
+
+                            </span>
+
+                        </div>
+
+
+                        <small class="text-muted">
+
+                            @thread.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")
+
+                        </small>
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="card">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-chat-square-text display-4 text-muted"></i>
+
+                <h4 class="mt-3">
+                    No discussions yet
+                </h4>
+
+                <p class="text-muted">
+                    Start the first discussion and help build the LUMEN community.
+                </p>
+
+                <a asp-controller="Forum"
+                   asp-action="Create"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Start a Discussion
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+
+</div>

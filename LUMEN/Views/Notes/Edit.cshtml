@@ -1,0 +1,10 @@
+﻿@model Note
+@{ ViewData["Title"] = "Edit Note"; }
+<div class="container mt-4">
+    <h1>Edit Note: @Model.Lesson.Title</h1>
+    <form asp-action="Save" method="post">
+        <input type="hidden" name="lessonId" value="@Model.LessonId" />
+        <div class="mb-3"><textarea name="content" class="form-control" rows="10">@Model.Content</textarea></div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

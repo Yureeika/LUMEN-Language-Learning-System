@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "Search Results";
+    Layout = "_AdminLayout";
+    var results = ViewBag.Results as LUMEN.ViewModels.AdminSearchViewModel;
+    var query = ViewBag.Query as string;
+}
+
+<div class="search-results-page">
+    <div class="search-header">
+        <h1>Search Results for "@query"</h1>
+        <p>Found @(results?.Users.Count ?? 0) users, @(results?.Subjects.Count ?? 0) subjects, @(results?.Announcements.Count ?? 0) announcements</p>
+    </div>
+
+    @if (results?.Users.Any() == true)
+    {
+        <div class="result-section">
+            <h2><i class="bi bi-people-fill"></i> Users (@results.Users.Count)</h2>
+            <div class="result-grid">
+                @foreach (var user in results.Users)
+                {
+                    <div class="result-card">
+                        <div class="result-avatar">@user.FirstName?.Substring(0, 1).ToUpper()</div>
+                        <div class="result-info">
+                            <strong>@user.FirstName @user.LastName</strong>
+                            <span>@user.Email</span>
+                            <span class="result-badge">@user.Categories</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (results?.Subjects.Any() == true)
+    {
+        <div class="result-section">
+            <h2><i class="bi bi-book-fill"></i> Subjects (@results.Subjects.Count)</h2>
+            <div class="result-grid">
+                @foreach (var subject in results.Subjects)
+                {
+                    <div class="result-card">
+                        <div class="result-icon"><i class="bi bi-book"></i></div>
+                        <div class="result-info">
+                            <strong>@subject.Title</strong>
+                            <span>@subject.Category</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (results?.Announcements.Any() == true)
+    {
+        <div class="result-section">
+            <h2><i class="bi bi-megaphone-fill"></i> Announcements (@results.Announcements.Count)</h2>
+            <div class="result-list">
+                @foreach (var ann in results.Announcements)
+                {
+                    <div class="result-card full">
+                        <strong>@ann.Title</strong>
+                        <span>@(ann.Content?.Length > 100 ? ann.Content.Substring(0, 100) + "..." : ann.Content)</span>
+                        <span class="result-date">@ann.CreatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if ((results?.Users.Count ?? 0) + (results?.Subjects.Count ?? 0) + (results?.Announcements.Count ?? 0) == 0)
+    {
+        <div class="no-results">
+            <i class="bi bi-search"></i>
+            <h2>No results found</h2>
+            <p>Try searching with different keywords</p>
+        </div>
+    }
+</div>
+
+<style>
+    .search-results-page { max-width: 1200px; }
+    .search-header { margin-bottom: 2rem; }
+    .search-header h1 { font-size: 1.8rem; color: #1E1E2E; margin-bottom: 0.5rem; }
+    .search-header p { color: #6b6b6b; }
+    .result-section { margin-bottom: 2rem; }
+    .result-section h2 {
+        font-size: 1.2rem;
+        color: #1E1E2E;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    .result-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .result-card.full { flex-direction: column; align-items: flex-start; }
+    .result-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #C65D3E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    .result-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: rgba(198, 93, 62, 0.1);
+        color: #C65D3E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .result-info { flex: 1; min-width: 0; }
+    .result-info strong { display: block; color: #1E1E2E; }
+    .result-info span { font-size: 0.85rem; color: #6b6b6b; display: block; }
+    .result-badge {
+        display: inline-block;
+        background: #FAF6ED;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+    .result-date { font-size: 0.8rem; color: #6b6b6b; }
+    .result-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6b6b6b;
+    }
+    .no-results i { font-size: 4rem; margin-bottom: 1rem; display: block; }
+</style>

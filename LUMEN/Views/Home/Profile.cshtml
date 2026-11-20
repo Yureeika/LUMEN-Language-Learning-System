@@ -1,0 +1,475 @@
+﻿@{
+    var user = ViewBag.User as LUMEN.Models.ApplicationUser;
+    var isAdmin = ViewBag.IsAdmin;
+    ViewData["Title"] = "My Profile";
+    Layout = isAdmin ? "_AdminLayout" : "_Layout";
+}
+
+<div class="profile-page">
+
+    <div class="profile-header">
+        <div class="profile-avatar-large">
+            @(user?.Nickname?.Substring(0, 1).ToUpper()
+                ?? user?.FirstName?.Substring(0, 1).ToUpper()
+                ?? "U")
+        </div>
+
+        <div class="profile-info">
+            <h1>
+                @(user?.Nickname ?? $"{user?.FirstName} {user?.LastName}")
+            </h1>
+
+            <p class="profile-email">@user?.Email</p>
+
+            <span class="profile-badge @(isAdmin ? "admin" : "student")">
+                @(isAdmin ? "Administrator" : "Student")
+            </span>
+        </div>
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="profile-grid">
+
+        <!-- EDIT PROFILE -->
+        <div class="profile-card @(isAdmin ? "full-width" : "")">
+
+            <h3>
+                <i class="bi bi-person-gear"></i>
+                Edit Profile
+            </h3>
+
+            <form action="/Home/UpdateProfile" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label>Nickname (displayed everywhere)</label>
+
+                    <input type="text"
+                           name="Nickname"
+                           value="@user?.Nickname"
+                           placeholder="Your nickname" />
+                </div>
+
+
+                <div class="form-group">
+                    <label>First Name</label>
+
+                    <input type="text"
+                           name="FirstName"
+                           value="@user?.FirstName" />
+                </div>
+
+
+                <div class="form-group">
+                    <label>Last Name</label>
+
+                    <input type="text"
+                           name="LastName"
+                           value="@user?.LastName" />
+                </div>
+
+
+                <button type="submit" class="btn-primary">
+                    Save Changes
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- STUDENT STATS ONLY -->
+        @if (!isAdmin)
+        {
+            <div class="profile-card">
+
+                <h3>
+                    <i class="bi bi-graph-up"></i>
+                    Your Stats
+                </h3>
+
+                <div class="stats-grid">
+
+                    <div class="stat-box">
+                        <span class="stat-value">
+                            @(ViewBag.Enrollments?.Count ?? 0)
+                        </span>
+
+                        <span class="stat-label">
+                            Enrolled
+                        </span>
+                    </div>
+
+
+                    <div class="stat-box">
+                        <span class="stat-value">
+                            @(ViewBag.Attempts?.Count ?? 0)
+                        </span>
+
+                        <span class="stat-label">
+                            Quizzes Taken
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+
+        <!-- ENROLLMENTS - STUDENTS ONLY -->
+        @if (!isAdmin)
+        {
+            <div class="profile-card full-width">
+
+                <h3>
+                    <i class="bi bi-book"></i>
+                    My Enrollments
+                </h3>
+
+
+                @if (ViewBag.Enrollments != null &&
+                     ViewBag.Enrollments.Count > 0)
+                {
+                    <div class="enrollment-list">
+
+                        @foreach (var enrollment in
+                                 ViewBag.Enrollments as List<LUMEN.Models.Enrollment>)
+                        {
+                            <div class="enrollment-item">
+
+                                <div class="enrollment-info">
+
+                                    <strong>
+                                        @enrollment.Subject?.Title
+                                    </strong>
+
+                                    <span>
+                                        @enrollment.Subject?.Category
+                                    </span>
+
+                                </div>
+
+                                <span class="enrollment-date">
+                                    @enrollment.EnrolledAt.ToString("MMM dd, yyyy")
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <p class="empty-state">
+                        No enrollments yet.
+                        <a href="/Subjects">Browse subjects</a>
+                    </p>
+                }
+
+            </div>
+        }
+
+
+        <!-- RECENT QUIZ ACTIVITY - STUDENTS ONLY -->
+        @if (!isAdmin)
+        {
+            <div class="profile-card full-width">
+
+                <h3>
+                    <i class="bi bi-question-circle"></i>
+                    Recent Quiz Activity
+                </h3>
+
+
+                @if (ViewBag.Attempts != null &&
+                     ViewBag.Attempts.Count > 0)
+                {
+                    <div class="attempts-list">
+
+                        @foreach (var attempt in
+                                 ViewBag.Attempts as List<LUMEN.Models.QuizAttempt>)
+                        {
+                            <div class="attempt-item">
+
+                                <div class="attempt-info">
+
+                                    <strong>
+                                        @attempt.Quiz?.Title
+                                    </strong>
+
+                                    <span>
+                                        @attempt.CompletedAt?.ToString("MMM dd, yyyy")
+                                    </span>
+
+                                </div>
+
+
+                                <span class="attempt-score @(attempt.Passed ? "passed" : "failed")">
+
+                                    @attempt.Score/@attempt.TotalPoints
+                                    -
+                                    @(attempt.Passed ? "Passed" : "Failed")
+
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <p class="empty-state">
+                        No quiz attempts yet.
+                    </p>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .profile-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #C65D3E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .profile-info h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #1E1E2E;
+    }
+
+    .profile-email {
+        color: #6b6b6b;
+        margin: 0.25rem 0;
+    }
+
+    .profile-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .profile-badge.admin {
+        background: rgba(198, 93, 62, 0.1);
+        color: #C65D3E;
+    }
+
+    .profile-badge.student {
+        background: rgba(122, 139, 92, 0.1);
+        color: #7A8B5C;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .profile-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .profile-card.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .profile-card h3 {
+        margin: 0 0 1.5rem;
+        font-size: 1.1rem;
+        color: #1E1E2E;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #C65D3E;
+    }
+
+    .btn-primary {
+        background: #C65D3E;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: #A84A2E;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .stat-box {
+        background: #FAF6ED;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #C65D3E;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #6b6b6b;
+    }
+
+    .enrollment-list,
+    .attempts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .enrollment-item,
+    .attempt-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #FAF6ED;
+        border-radius: 8px;
+    }
+
+    .enrollment-info strong,
+    .attempt-info strong {
+        display: block;
+        color: #1E1E2E;
+    }
+
+    .enrollment-info span,
+    .attempt-info span {
+        font-size: 0.85rem;
+        color: #6b6b6b;
+    }
+
+    .attempt-score {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .attempt-score.passed {
+        background: rgba(46, 125, 50, 0.1);
+        color: #2E7D32;
+    }
+
+    .attempt-score.failed {
+        background: rgba(220, 38, 38, 0.1);
+        color: #DC2626;
+    }
+
+    .empty-state {
+        color: #6b6b6b;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .empty-state a {
+        color: #C65D3E;
+    }
+
+    .alert-success {
+        background: rgba(46, 125, 50, 0.1);
+        color: #2E7D32;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+
+    @@media (max-width: 768px) {
+
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-card.full-width {
+            grid-column: auto;
+        }
+
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+    }
+
+</style>

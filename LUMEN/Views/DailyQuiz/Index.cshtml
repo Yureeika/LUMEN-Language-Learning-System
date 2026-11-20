@@ -1,0 +1,126 @@
+﻿@model IEnumerable<LUMEN.Models.Quiz>
+
+@{
+    if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (User.Identity?.IsAuthenticated == true)
+    {
+        Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    ViewData["Title"] = "Daily Quiz";
+
+    var todayDate = ViewBag.TodayDate as string
+        ?? DateTime.UtcNow.ToString("dddd, MMMM dd, yyyy");
+}
+
+<div class="container-fluid">
+
+    <div class="page-header">
+        <h1>
+            <i class="bi bi-question-circle-fill"></i>
+            Daily Quiz
+        </h1>
+
+        <p>
+            Today's Date:
+            <strong>@todayDate</strong>
+        </p>
+    </div>
+
+    <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle"></i>
+        New quizzes rotate daily! Come back tomorrow for different questions.
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row mt-4">
+
+            @foreach (var quiz in Model)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card h-100">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title fw-bold">
+                                @quiz.Title
+                            </h5>
+
+                            <p class="card-text">
+                                @quiz.Description
+                            </p>
+
+                            <ul class="list-unstyled">
+
+                                <li class="mb-2">
+                                    <i class="bi bi-clock"></i>
+                                    Time Limit:
+                                    <strong>@quiz.TimeLimitMinutes minutes</strong>
+                                </li>
+
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle"></i>
+                                    Passing Score:
+                                    <strong>@quiz.PassingScore%</strong>
+                                </li>
+
+                                <li>
+                                    <i class="bi bi-book"></i>
+                                    Subject:
+                                    <strong>
+                                        @(quiz.Lesson?.Subject?.Title ?? "General")
+                                    </strong>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div class="card-footer">
+
+                            <a asp-action="Start"
+                               asp-route-id="@quiz.Id"
+                               class="btn btn-primary w-100">
+
+                                <i class="bi bi-play-circle"></i>
+                                Start Quiz
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+
+            <i class="bi bi-info-circle"></i>
+
+            No quizzes available today.
+
+            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+            {
+                <a href="/Seed" class="btn btn-primary ms-2">
+                    Seed Quizzes Now
+                </a>
+            }
+
+        </div>
+    }
+
+</div>

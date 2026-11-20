@@ -1,0 +1,1548 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "LUMEN - Learn Without Limits";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --terracotta: #C65D3E;
+            --terracotta-hover: #A84A2E;
+            --cream: #FAF6ED;
+            --cream-dark: #F0E8D5;
+            --black: #1a1a1a;
+            --gray: #6b6b6b;
+            --navy: #1E1E2E;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--black);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Navigation */
+        .top-nav {
+            background: var(--black);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .nav-brand span {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 100%;
+            margin-left: 0.5rem;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-actions a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .nav-actions a:hover {
+            color: var(--terracotta);
+        }
+        
+        .btn-primary {
+            background: var(--terracotta);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background: var(--terracotta-hover);
+            color: white;
+        }
+        
+        /* Hero */
+        .hero {
+            position: relative;
+            height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1920&q=80') center/cover;
+            z-index: 0;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30,30,46,0.85) 0%, rgba(26,26,26,0.75) 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 2.5rem;
+        }
+        
+        .btn-hero {
+            background: var(--terracotta);
+            border: none;
+            color: white;
+            padding: 1.2rem 3rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .btn-hero:hover {
+            background: var(--terracotta-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(198, 93, 62, 0.4);
+            color: white;
+        }
+        
+        /* Browse Section */
+        .browse-section {
+            background: var(--navy);
+            color: white;
+            padding: 5rem 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 1rem;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .category-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .category-card:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--terracotta);
+            transform: translateX(8px);
+        }
+        
+        .category-icon {
+            font-size: 3rem;
+            color: var(--terracotta);
+        }
+        
+        .category-info h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .category-info p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+        
+        /* About Section */
+        .about-section {
+            background: var(--cream);
+            padding: 5rem 2rem;
+        }
+        
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+        
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--black);
+            border-bottom: 2px solid var(--terracotta);
+            padding-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .about-content p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .about-image {
+            background: var(--cream-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .social-proof h3 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--black);
+        }
+        
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .testimonial {
+            padding: 1.5rem;
+            border-left: 3px solid var(--terracotta);
+            background: var(--cream);
+            border-radius: 4px;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--black);
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-role {
+            color: var(--terracotta);
+            font-size: 0.85rem;
+        }
+        
+        /* Featured Carousel Section */
+        .featured-section {
+            padding: 5rem 2rem;
+            background: var(--cream);
+        }
+        
+        .carousel-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            position: relative;
+        }
+        
+        .course-card {
+            background: white;
+            border: 1px solid var(--cream-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .course-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+        
+        .course-image {
+            height: 240px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .course-card:hover .course-image img {
+            transform: scale(1.05);
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .course-tag {
+            display: inline-block;
+            background: var(--cream-dark);
+            color: var(--black);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .course-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .course-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .course-link {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        
+        .course-link:hover { text-decoration: underline; }
+        
+        /* Carousel Controls */
+        .carousel-control-prev, .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background: var(--terracotta) !important;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 1;
+            border: none;
+            z-index: 10;
+        }
+        
+        .carousel-control-prev { left: -70px; }
+        .carousel-control-next { right: -70px; }
+        
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            background: var(--terracotta-hover) !important;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-size: 20px 20px;
+        }
+        
+        /* Explore More Button */
+        .explore-more {
+            text-align: center;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-explore {
+            background: transparent;
+            border: 2px solid var(--terracotta);
+            color: var(--terracotta);
+            padding: 1.2rem 3.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-explore::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--terracotta);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+        
+        .btn-explore:hover::before {
+            left: 0;
+        }
+        
+        .btn-explore:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(198, 93, 62, 0.4);
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        @@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.05);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: var(--terracotta);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* Modal Header */
+        .modal-header {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+        
+        .modal-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .modal-logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        
+        .modal-logo span {
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--black);
+            letter-spacing: 2px;
+        }
+        
+        .modal-subtitle {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        /* Modal Tabs */
+        .modal-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--cream-dark);
+            background: var(--cream);
+        }
+        
+        .modal-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .modal-tab i {
+            font-size: 1.1rem;
+        }
+        
+        .modal-tab.active {
+            background: var(--terracotta);
+            color: white;
+        }
+        
+        .modal-tab:hover:not(.active) {
+            background: var(--cream-dark);
+            color: var(--black);
+        }
+        
+        /* Modal Content */
+        .modal-content {
+            padding: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--black);
+            font-size: 0.9rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            color: var(--gray);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border: 1px solid var(--cream-dark);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: var(--cream);
+        }
+        
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--terracotta);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(198, 93, 62, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--terracotta);
+        }
+        
+        .forgot-link {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            background: var(--terracotta);
+            border: none;
+            color: white;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-submit:hover {
+            background: var(--terracotta-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(198, 93, 62, 0.3);
+        }
+        
+        /* Modal Footer */
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--cream-dark);
+            text-align: center;
+            background: var(--cream);
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .modal-footer p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .modal-footer a {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .modal-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+            text-align: left;
+        }
+        
+        .footer-section h4 {
+            color: var(--terracotta);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .footer-section a:hover {
+            color: var(--terracotta);
+            transform: translateX(5px);
+        }
+        .category-card.selected {
+    border: 3px solid #C65D3E !important;
+    background: rgba(198, 93, 62, 0.05) !important;
+    box-shadow: 0 4px 12px rgba(198, 93, 62, 0.2);
+}
+
+.category-card.selected .category-icon {
+    color: #C65D3E;
+}
+        .footer-logo h4 {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    color: var(--terracotta);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+/* Footer Logo */
+.footer-logo img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            background: var(--terracotta);
+            transform: translateY(-3px);
+            color: white;
+        }
+        
+        @@media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @@media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .search-bar { width: 200px; }
+            .category-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .testimonials { grid-template-columns: 1fr; }
+            .carousel-control-prev { left: 10px; }
+            .carousel-control-next { right: 10px; }
+            .footer-content { grid-template-columns: 1fr; gap: 2rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <a href="#home" class="nav-brand">
+    <img src="~/images/logo.png" alt="" class="nav-logo" />
+    <span>LUMEN</span>
+</a>
+        </a>
+        
+        
+        
+        <div class="nav-actions">
+            <a onclick="openModal('login')">Login</a>
+            <a onclick="openModal('register')" class="btn btn-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Learn Without Limits</h1>
+            <p>Master coding or languages with our expert-led courses</p>
+            <a onclick="openModal('register')" class="btn-hero" style="cursor: pointer;">Start Learning Today</a>
+        </div>
+    </section>
+
+    <!-- Browse Categories -->
+    <section class="browse-section">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="category-grid">
+            <a onclick="toggleCategory(this, 'Coding')" class="category-card" style="cursor: pointer;" data-value="Coding">
+    <div class="category-icon">
+        <i class="bi bi-code-slash"></i>
+    </div>
+    <div class="category-info">
+        <h3>Coding</h3>
+        <p>5 programming & technology subjects</p>
+    </div>
+</a>
+<a onclick="toggleCategory(this, 'Languages')" class="category-card" style="cursor: pointer;" data-value="Languages">
+    <div class="category-icon">
+        <i class="bi bi-translate"></i>
+    </div>
+    <div class="category-info">
+        <h3>Languages</h3>
+        <p>5 language learning paths</p>
+    </div>
+</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2>About LUMEN</h2>
+                    <p>LUMEN focuses on two main learning categories: <strong>Languages</strong> and <strong>Coding</strong>. The platform aims to provide an organised learning environment where users can explore courses, access lessons, complete quizzes, and improve their knowledge gradually.</p>
+                    <p>Our mission is to make quality education accessible to everyone, everywhere. With interactive learning tools and a supportive community, LUMEN transforms the way you learn.</p>
+                    
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">30+</span>
+                            <span class="stat-label">Courses</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Students</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">95%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Students learning" />
+                </div>
+            </div>
+            
+            <!-- Social Proof -->
+            <div class="social-proof">
+                <h3>What Our Students Say</h3>
+                <div class="testimonials">
+                    <div class="testimonial">
+                        <p class="testimonial-text">"LUMEN helped me transition from zero coding knowledge to landing my first developer job. The structured courses and hands-on projects made all the difference."</p>
+                        <div class="testimonial-author">Sarah Johnson</div>
+                        <div class="testimonial-role">Junior Developer</div>
+                    </div>
+                    <div class="testimonial">
+                        <p class="testimonial-text">"I've tried many language platforms, but LUMEN's approach to teaching Spanish is exceptional. The cultural context and interactive lessons keep me engaged every day."</p>
+                        <div class="testimonial-author">Michael Chen</div>
+                        <div class="testimonial-role">Spanish Learner</div>
+                    </div>
+                    <div class="testimonial">
+                        <p class="testimonial-text">"The quiz system and progress tracking keep me motivated. I've completed 5 coding courses and earned certifications that actually helped my career."</p>
+                        <div class="testimonial-author">Emma Rodriguez</div>
+                        <div class="testimonial-role">Full-Stack Developer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Courses Carousel -->
+    <section class="featured-section" id="courses">
+        <h2 class="section-title" style="color: var(--black); border-color: var(--cream-dark);">Featured Courses</h2>
+        
+        <div class="carousel-container">
+            <div id="courseCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&q=80" alt="C#" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">C# Programming</h3>
+                                        <p class="course-desc">Master C# from basics to advanced OOP concepts with hands-on projects.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80" alt="Web Dev" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">Web Development</h3>
+                                        <p class="course-desc">Build modern websites with HTML, CSS, JavaScript and React.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800&q=80" alt="Spanish" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">Spanish</h3>
+                                        <p class="course-desc">Learn Spanish from beginner to advanced with immersive cultural context.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Data" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">Data Science</h3>
+                                        <p class="course-desc">Analyze data and build machine learning models with Python.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80" alt="Python" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">Python Programming</h3>
+                                        <p class="course-desc">Learn Python for data science, web development, and automation.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" alt="Security" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">Cybersecurity</h3>
+                                        <p class="course-desc">Learn network security, encryption, and ethical hacking.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" alt="French" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">French</h3>
+                                        <p class="course-desc">Master French language and culture from basics to fluency.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80" alt="German" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">German</h3>
+                                        <p class="course-desc">German language fundamentals and conversation skills.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="carousel-item">
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&q=80" alt="Italian" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">Italian</h3>
+                                        <p class="course-desc">Italian language and culture immersion for all levels.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=800&q=80" alt="Chinese" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">Chinese (Mandarin)</h3>
+                                        <p class="course-desc">Mandarin Chinese with characters and pinyin from scratch.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80" alt="Japanese" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Languages</span>
+                                        <h3 class="course-title">Japanese</h3>
+                                        <p class="course-desc">Japanese language with hiragana, katakana, and kanji.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="course-card">
+                                    <div class="course-image">
+                                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80" alt="JavaScript" />
+                                    </div>
+                                    <div class="course-content">
+                                        <span class="course-tag">Coding</span>
+                                        <h3 class="course-title">JavaScript</h3>
+                                        <p class="course-desc">Master modern JavaScript ES6+ for web development.</p>
+                                        <a onclick="openModal('register')" class="course-link" style="cursor: pointer;">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="explore-more">
+            <button class="btn-explore" onclick="openModal('register')">Explore More Courses</button>
+        </div>
+    </section>
+
+    <!-- Login/Register Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            
+            <!-- Modal Header with Logo -->
+            <div class="modal-header">
+                <div class="modal-logo">
+    <img src="~/images/logo.png" alt="" class="modal-logo-img" />
+    <span>LUMEN</span>
+</div>
+                
+            </div>
+            
+            <!-- Modal Tabs -->
+            <div class="modal-tabs">
+                <button class="modal-tab active" id="loginTab" onclick="switchTab('login')">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </button>
+                <button class="modal-tab" id="registerTab" onclick="switchTab('register')">
+                    <i class="bi bi-person-plus"></i> Register
+                </button>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="modal-content" id="loginForm">
+                <form action="/Account/Login" method="post">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope"></i>
+                            <input type="email" name="Email" required placeholder="you@example.com" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock"></i>
+                            <input type="password" name="Password" required placeholder="••••••••" />
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="RememberMe" />
+                            <span>Remember me</span>
+                        </label>
+                        <a href="/Account/ForgotPassword" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div class="modal-content" id="registerForm" style="display: none;">
+                <form id="registerForm" action="/Account/Register" method="post">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <div class="input-wrapper">
+                                <i class="bi bi-person"></i>
+                                <input type="text" name="FirstName" required placeholder="John" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <div class="input-wrapper">
+                                <i class="bi bi-person"></i>
+                                <input type="text" name="LastName" required placeholder="Doe" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope"></i>
+                            <input type="email" name="Email" required placeholder="you@example.com" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock"></i>
+                            <input type="password" name="Password" required placeholder="••••••••" />
+                        </div>
+                        <small class="form-hint">Minimum 8 characters with uppercase, lowercase, number, and special character</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock-fill"></i>
+                            <input type="password" name="ConfirmPassword" required placeholder="••••••••" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-person-plus"></i> Create Account
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About LUMEN</h4>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6;">
+                    Empowering learners worldwide with quality education in coding and languages.
+                </p>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <div class="footer-logo">
+    <img src="~/images/logo.png" alt="" />
+    <h4>LUMEN</h4>
+</div>
+                <ul>
+                    <li><a onclick="scrollToSection('home')">Home</a></li>
+                    <li><a onclick="scrollToSection('about')">About Us</a></li>
+                    <li><a onclick="scrollToSection('courses')">Explore Courses</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a onclick="openModal('register')">Coding</a></li>
+                    <li><a onclick="openModal('register')">Languages</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; @DateTime.Now.Year LUMEN Learning Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      
+        
+        // Modal functions
+        function openModal(tab) {
+            document.getElementById('authModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            switchTab(tab || 'login');
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const subtitle = document.getElementById('modalSubtitle');
+            
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                subtitle.textContent = 'Welcome back! Please login to your account.';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                loginTab.classList.remove('active');
+                registerTab.classList.add('active');
+                subtitle.textContent = 'Create your account and start learning today!';
+            }
+        }
+        
+        // Scroll to section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Close modal on outside click
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+         // Handle category card selection
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            updateHiddenCategories();
+        });
+    });
+
+    function updateHiddenCategories() {
+        const selected = document.querySelectorAll('.category-card.selected');
+        const values = Array.from(selected).map(c => c.dataset.value);
+        
+        // Remove old hidden inputs
+        document.querySelectorAll('input[name="Categories"]').forEach(i => i.remove());
+        
+        // Add new hidden inputs
+        const form = document.getElementById('registerForm');
+        values.forEach(v => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'Categories';
+            input.value = v;
+            form.appendChild(input);
+        });
+    }
+    // Category selection for registration
+function toggleCategory(element, value) {
+    element.classList.toggle('selected');
+    updateCategoryInputs();
+}
+
+function updateCategoryInputs() {
+    const selected = document.querySelectorAll('.category-card.selected');
+    const values = Array.from(selected).map(c => c.getAttribute('data-value'));
+    
+    // Remove old hidden inputs
+    document.querySelectorAll('input[name="Categories"]').forEach(i => i.remove());
+    
+    // Add new hidden inputs to the register form
+    const form = document.getElementById('registerForm');
+    if (form) {
+        values.forEach(v => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'Categories';
+            input.value = v;
+            form.appendChild(input);
+        });
+    }
+}
+
+// Also update openModal to handle category selection
+const originalOpenModal = window.openModal;
+window.openModal = function(type) {
+    if (originalOpenModal) originalOpenModal(type);
+    
+    // If opening register modal, ensure form exists
+    if (type === 'register') {
+        setTimeout(() => {
+            const form = document.getElementById('registerForm');
+            if (form && !form.querySelector('input[name="Categories"]')) {
+                // Form exists but no categories selected yet - that's OK
+            }
+        }, 100);
+    }
+};
+    </script>
+</body>
+</html>

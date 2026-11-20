@@ -1,0 +1,1051 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - LUMEN</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <style>
+        :root {
+            --terracotta: #C65D3E;
+            --terracotta-hover: #A84A2E;
+
+            --olive: #7A8B5C;
+            --olive-light: rgba(122, 139, 92, 0.12);
+
+            --cream: #FAF6ED;
+            --cream-dark: #F0E8D5;
+
+            --navy: #1E1E2E;
+            --navy-light: #27273A;
+
+            --black: #1A1A1A;
+
+            --gray: #6B6B6B;
+            --gray-light: #F5F5F5;
+
+            --success: #2E7D32;
+            --warning: #F59E0B;
+            --danger: #DC2626;
+            --info: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* =========================================================
+           MAIN WRAPPER
+        ========================================================= */
+
+        .student-wrapper {
+            min-height: 100vh;
+        }
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .student-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 260px;
+            height: 100vh;
+
+            background: var(--navy);
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            z-index: 1000;
+
+            transition: transform 0.3s ease;
+
+            scrollbar-width: thin;
+            scrollbar-color: #555568 transparent;
+        }
+
+        .student-sidebar::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .student-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .student-sidebar::-webkit-scrollbar-thumb {
+            background: #555568;
+            border-radius: 10px;
+        }
+
+        .student-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #77778A;
+        }
+
+        /* =========================================================
+           SIDEBAR HEADER
+        ========================================================= */
+
+        .sidebar-header {
+            min-height: 105px;
+
+            padding: 1.5rem 1.5rem;
+
+            display: flex;
+            align-items: center;
+
+            gap: 0.8rem;
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .sidebar-brand {
+            color: white;
+
+            font-size: 1.55rem;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+        }
+
+        /* =========================================================
+           SIDEBAR NAV
+        ========================================================= */
+
+        .sidebar-nav {
+            padding: 1.1rem 0 2rem;
+
+            flex: 1;
+        }
+
+        .sidebar-section {
+            padding: 1.1rem 1.5rem 0.65rem;
+
+            color: rgba(255,255,255,0.48);
+
+            font-size: 0.72rem;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+        }
+
+        .sidebar-link {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 0.85rem;
+
+            padding: 0.85rem 1.5rem;
+
+            color: rgba(255,255,255,0.85);
+
+            text-decoration: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-family: inherit;
+            font-size: 0.93rem;
+            font-weight: 500;
+
+            text-align: left;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                padding-left 0.2s ease;
+
+            cursor: pointer;
+        }
+
+        .sidebar-link i {
+            width: 22px;
+
+            min-width: 22px;
+
+            text-align: center;
+
+            font-size: 1.15rem;
+
+            color: rgba(255,255,255,0.85);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255,255,255,0.06);
+
+            color: white;
+
+            padding-left: 1.65rem;
+        }
+
+        .sidebar-link:hover i {
+            color: white;
+        }
+
+        .sidebar-link.active {
+            background: var(--terracotta);
+
+            color: white;
+
+            font-weight: 600;
+        }
+
+        .sidebar-link.active i {
+            color: white;
+        }
+
+        /* =========================================================
+           MAIN AREA
+        ========================================================= */
+
+        .student-main {
+            min-height: 100vh;
+
+            margin-left: 260px;
+
+            transition: margin-left 0.3s ease;
+        }
+
+        .student-sidebar.collapsed {
+            transform: translateX(-260px);
+        }
+
+        .student-sidebar.collapsed ~ .student-main {
+            margin-left: 0;
+        }
+
+        /* =========================================================
+           TOP BAR
+        ========================================================= */
+
+        .student-topbar {
+            position: sticky;
+
+            top: 0;
+
+            height: 105px;
+
+            background: var(--navy);
+
+            color: white;
+
+            padding: 1rem 2rem;
+
+            display: flex;
+            align-items: center;
+
+            gap: 1.5rem;
+
+            z-index: 900;
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+
+            gap: 1.5rem;
+
+            flex: 1;
+        }
+
+        /* =========================================================
+           HAMBURGER
+        ========================================================= */
+
+        .hamburger-btn {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: transparent;
+
+            border: none;
+
+            color: white;
+
+            font-size: 1.7rem;
+
+            cursor: pointer;
+
+            border-radius: 8px;
+
+            flex-shrink: 0;
+
+            transition: background 0.2s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        .topbar-search {
+            display: flex;
+            align-items: center;
+
+            width: 100%;
+            max-width: 565px;
+
+            background: rgba(255,255,255,0.08);
+
+            border: 1px solid rgba(255,255,255,0.12);
+
+            border-radius: 10px;
+
+            padding: 0.75rem 1rem;
+
+            color: rgba(255,255,255,0.8);
+        }
+
+        .topbar-search i {
+            font-size: 1.2rem;
+        }
+
+        .topbar-search input {
+            width: 100%;
+
+            margin-left: 0.7rem;
+
+            background: transparent;
+
+            border: none;
+
+            outline: none;
+
+            color: white;
+
+            font-size: 0.95rem;
+        }
+
+        .topbar-search input::placeholder {
+            color: rgba(255,255,255,0.65);
+        }
+
+        /* =========================================================
+           TOPBAR ACTIONS
+        ========================================================= */
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 1rem;
+
+            margin-left: auto;
+        }
+
+        .topbar-icon {
+            position: relative;
+
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+
+            font-size: 1.2rem;
+
+            cursor: pointer;
+        }
+
+        .topbar-icon:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .notification-badge {
+            position: absolute;
+
+            top: -3px;
+            right: -3px;
+
+            width: 20px;
+            height: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--danger);
+
+            color: white;
+
+            font-size: 0.7rem;
+
+            border-radius: 50%;
+
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           USER
+        ========================================================= */
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+
+            gap: 0.75rem;
+
+            color: white;
+
+            padding: 0.4rem 0.7rem;
+
+            border-radius: 8px;
+
+            white-space: nowrap;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--terracotta);
+
+            color: white;
+
+            border-radius: 50%;
+
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        .student-content {
+            min-height: calc(100vh - 105px);
+
+            padding: 2.5rem 3.5rem;
+
+            background: var(--cream);
+        }
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .card {
+            border: 1px solid #E6E1D8;
+
+            border-radius: 14px;
+
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+        }
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .btn-primary,
+        a.btn-primary,
+        button.btn-primary {
+            background-color: var(--terracotta) !important;
+
+            border-color: var(--terracotta) !important;
+
+            color: white !important;
+
+            font-weight: 600;
+
+            border-radius: 8px;
+
+            padding: 0.625rem 1.25rem;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background-color: var(--terracotta-hover) !important;
+
+            border-color: var(--terracotta-hover) !important;
+
+            color: white !important;
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @@media (max-width: 900px) {
+
+            .student-sidebar {
+                transform: translateX(-260px);
+            }
+
+            .student-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .student-main {
+                margin-left: 0 !important;
+            }
+
+            .student-topbar {
+                height: 80px;
+
+                padding: 0.75rem 1rem;
+            }
+
+            .student-content {
+                min-height: calc(100vh - 80px);
+
+                padding: 1.5rem;
+            }
+
+            .topbar-search {
+                display: none;
+            }
+
+            .user-dropdown span {
+                display: none;
+            }
+        }
+
+        @@media (max-width: 576px) {
+
+            .student-content {
+                padding: 1rem;
+            }
+
+            .student-topbar {
+                gap: 0.5rem;
+            }
+
+            .topbar-left {
+                gap: 0.5rem;
+            }
+
+            .topbar-actions {
+                gap: 0.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="student-wrapper">
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================== -->
+
+    <aside class="student-sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+
+            <img src="~/images/logo.png"
+                 alt="LUMEN"
+                 class="sidebar-logo" />
+
+            <span class="sidebar-brand">
+                LUMEN
+            </span>
+
+        </div>
+
+        <nav class="sidebar-nav">
+
+            @{
+                var ctrl =
+                    ViewContext.RouteData.Values["controller"]?.ToString()
+                    ?? "";
+
+                var act =
+                    ViewContext.RouteData.Values["action"]?.ToString()
+                    ?? "";
+            }
+
+            <!-- ================= MAIN ================= -->
+
+            <div class="sidebar-section">
+                Main
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Dashboard"
+               class="sidebar-link @(ctrl == "Home" && act == "Dashboard" ? "active" : "")">
+
+                <i class="bi bi-speedometer2"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+            <a asp-controller="Subjects"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Subjects" ? "active" : "")">
+
+                <i class="bi bi-book-fill"></i>
+
+                <span>Browse Subjects</span>
+
+            </a>
+
+            <a asp-controller="MySubjects"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "MySubjects" ? "active" : "")">
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>My Subjects</span>
+
+            </a>
+
+
+            <!-- ================= CONTENT ================= -->
+
+            <div class="sidebar-section">
+                Content
+            </div>
+
+            
+                </a>
+
+                <a asp-controller="Lessons"
+   asp-action="Index"
+   class="sidebar-link @(ctrl == "Lessons" ? "active" : "")">
+
+    <i class="bi bi-journal-text"></i>
+
+    <span>
+        Lessons
+    </span>
+
+</a>
+
+            <a asp-controller="DailyQuiz"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "DailyQuiz" ? "active" : "")">
+
+                <i class="bi bi-question-circle-fill"></i>
+
+                <span>Daily Quiz</span>
+
+            </a>
+
+            <a asp-controller="DailyTrack"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "DailyTrack" ? "active" : "")">
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <span>Daily Track</span>
+
+            </a>
+
+            <a asp-controller="Announcements"
+                   asp-action="Index"
+                   class="sidebar-link @(ctrl == "Announcements" ? "active" : "")">
+
+                    <i class="bi bi-megaphone-fill"></i>
+
+                    <span>
+                        Announcements
+                    </span>
+
+                </a>
+
+            <!-- ================= SYSTEM ================= -->
+
+            <div class="sidebar-section">
+                System
+            </div>
+
+
+            <a asp-controller="Leaderboard"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Leaderboard" ? "active" : "")">
+
+                <i class="bi bi-trophy-fill"></i>
+
+                <span>Leaderboard</span>
+
+            </a>
+
+
+            <!-- ================= LEARNING ================= -->
+
+            <div class="sidebar-section">
+                Learning
+            </div>
+
+            <a asp-controller="VirtualLab"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "VirtualLab" ? "active" : "")">
+
+                <i class="bi bi-code-slash"></i>
+
+                <span>Virtual Lab</span>
+
+            </a>
+
+            <a asp-controller="Bookmarks"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Bookmarks" ? "active" : "")">
+
+                <i class="bi bi-bookmark-fill"></i>
+
+                <span>Bookmarks</span>
+
+            </a>
+
+            <a asp-controller="Notes"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Notes" ? "active" : "")">
+
+                <i class="bi bi-journal-text"></i>
+
+                <span>Notes</span>
+
+            </a>
+
+            <a asp-controller="Badges"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Badges" ? "active" : "")">
+
+                <i class="bi bi-award-fill"></i>
+
+                <span>Badges</span>
+
+            </a>
+
+            <a asp-controller="Certificates"
+               asp-action="Index"
+               class="sidebar-link @(ctrl == "Certificates" ? "active" : "")">
+
+                <i class="bi bi-patch-check-fill"></i>
+
+                <span>Certificates</span>
+
+            </a>
+
+
+            <!-- ================= ACCOUNT ================= -->
+
+            <div class="sidebar-section">
+                Account
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Profile"
+               class="sidebar-link @(ctrl == "Home" && act == "Profile" ? "active" : "")">
+
+                <i class="bi bi-person-fill"></i>
+
+                <span>My Profile</span>
+
+            </a>
+
+            <form asp-controller="Account"
+                  asp-action="Logout"
+                  method="post"
+                  style="margin:0;">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="sidebar-link">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    <span>Logout</span>
+
+                </button>
+
+            </form>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main class="student-main">
+
+        <!-- ================= TOPBAR ================= -->
+
+        <header class="student-topbar">
+
+            <div class="topbar-left">
+
+                <button type="button"
+                        class="hamburger-btn"
+                        onclick="toggleSidebar()"
+                        aria-label="Toggle navigation">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <div class="topbar-search">
+
+                    <i class="bi bi-search"></i>
+
+                    <input type="text"
+                           placeholder="Search courses..." />
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <button type="button"
+                        class="topbar-icon"
+                        aria-label="Notifications">
+
+                    <i class="bi bi-bell"></i>
+
+                    <span class="notification-badge">
+                        0
+                    </span>
+
+                </button>
+
+
+                <div class="user-dropdown">
+
+                    <div class="user-avatar">
+
+                        @{
+                            var userName =
+                                User.Identity?.Name ?? "User";
+
+                            var userInitial =
+                                userName.Length > 0
+                                    ? userName.Substring(0, 1).ToUpper()
+                                    : "U";
+                        }
+
+                        @userInitial
+
+                    </div>
+
+                    <span>
+                        @userName
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= PAGE CONTENT ================= -->
+
+        <div class="student-content">
+
+            @RenderBody()
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    const SIDEBAR_SCROLL_KEY = "lumen_sidebar_scroll";
+
+    function toggleSidebar() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        if (!sidebar) {
+            return;
+        }
+
+        if (window.innerWidth <= 900) {
+
+            sidebar.classList.toggle("mobile-open");
+
+        } else {
+
+            sidebar.classList.toggle("collapsed");
+
+        }
+    }
+
+
+    /*
+        Save sidebar scroll position.
+        This prevents the sidebar from jumping back
+        to the top every time a navigation link is clicked.
+    */
+
+    function saveSidebarScroll() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        if (!sidebar) {
+            return;
+        }
+
+        localStorage.setItem(
+            SIDEBAR_SCROLL_KEY,
+            sidebar.scrollTop
+        );
+    }
+
+
+    /*
+        Restore sidebar position after the page loads.
+    */
+
+    function restoreSidebarScroll() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        if (!sidebar) {
+            return;
+        }
+
+        const savedPosition =
+            localStorage.getItem(
+                SIDEBAR_SCROLL_KEY
+            );
+
+        if (savedPosition !== null) {
+
+            sidebar.scrollTop =
+                parseInt(savedPosition, 10);
+
+        }
+    }
+
+
+    /*
+        Save position before navigation.
+    */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const link =
+                event.target.closest(
+                    ".sidebar-link"
+                );
+
+            if (link) {
+
+                saveSidebarScroll();
+
+            }
+
+        }
+    );
+
+
+    /*
+        Save position when leaving page.
+    */
+
+    window.addEventListener(
+        "beforeunload",
+        saveSidebarScroll
+    );
+
+
+    /*
+        Restore after page loads.
+    */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            restoreSidebarScroll();
+
+        }
+    );
+
+</script>
+
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+﻿@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "_StudentLayout";
+    var user = ViewBag.User as LUMEN.Models.ApplicationUser;
+}
+
+<div class="student-dashboard">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Welcome back, @(user?.Nickname ?? user?.FirstName ?? "Student")! 👋</h1>
+            <p class="dashboard-subtitle">Here's your learning progress overview</p>
+        </div>
+        <div class="header-actions">
+            <span class="streak-indicator">
+                <i class="bi bi-fire" style="color: #F59E0B;"></i>
+                @ViewBag.Streak day streak
+            </span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card primary">
+            <div class="kpi-icon">
+                <i class="bi bi-lightning-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Total XP</span>
+                <span class="kpi-value">@ViewBag.TotalXP</span>
+                <span class="kpi-trend positive">
+                    <i class="bi bi-arrow-up"></i> Keep earning!
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card success">
+            <div class="kpi-icon">
+                <i class="bi bi-book-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Enrolled</span>
+                <span class="kpi-value">@ViewBag.EnrolledCount</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-check-circle"></i> Active courses
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card warning">
+            <div class="kpi-icon">
+                <i class="bi bi-award-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Badges</span>
+                <span class="kpi-value">@ViewBag.BadgesCount</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-star"></i> Earned badges
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card info">
+            <div class="kpi-icon">
+                <i class="bi bi-question-circle-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Quiz Attempts</span>
+                <span class="kpi-value">@ViewBag.QuizAttemptsCount</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-trophy"></i> @ViewBag.PassedQuizzes passed
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-row">
+        <!-- XP Over Time -->
+        <div class="chart-card large">
+            <div class="chart-header">
+                <h3>XP Earned Over Time</h3>
+                <span class="chart-period">Last 7 days</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="xpChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Quiz Performance -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Quiz Performance</h3>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle"
+                                stroke-dasharray="@ViewBag.PassRate, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div class="metric-value">@ViewBag.PassRate%</div>
+                    </div>
+                    <div class="metric-label">Pass Rate</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle avg"
+                                stroke-dasharray="@ViewBag.AvgScore, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div class="metric-value">@ViewBag.AvgScore%</div>
+                    </div>
+                    <div class="metric-label">Avg Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-row">
+        <!-- Subject Progress -->
+        <div class="chart-card large">
+            <div class="chart-header">
+                <h3>Subject Progress</h3>
+                <span class="chart-period">Your courses</span>
+            </div>
+            <div class="subject-progress-list">
+                @if (ViewBag.SubjectProgress != null)
+                {
+                    var subjects = ViewBag.SubjectProgress as List<dynamic>;
+                    if (subjects != null && subjects.Any())
+                    {
+                        foreach (var subject in subjects)
+                        {
+                            <div class="progress-item">
+                                <div class="progress-info">
+                                    <div class="progress-name">@subject.Title</div>
+                                    <div class="progress-percent">@subject.Progress%</div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: @subject.Progress%"></div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="bi bi-book" style="font-size: 2rem; color: var(--gray);"></i>
+                            <p>No enrollments yet. <a href="/Subjects" style="color: var(--terracotta);">Browse subjects</a> to start learning!</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="quick-actions">
+                <a href="/Subjects" class="action-btn primary">
+                    <i class="bi bi-book-fill"></i>
+                    <div>
+                        <strong>Browse Subjects</strong>
+                        <span>Find new courses</span>
+                    </div>
+                </a>
+                <a href="/DailyQuiz" class="action-btn success">
+                    <i class="bi bi-question-circle-fill"></i>
+                    <div>
+                        <strong>Daily Quiz</strong>
+                        <span>Test your knowledge</span>
+                    </div>
+                </a>
+                <a href="/VirtualLab" class="action-btn warning">
+                    <i class="bi bi-code-slash"></i>
+                    <div>
+                        <strong>Virtual Lab</strong>
+                        <span>Practice coding</span>
+                    </div>
+                </a>
+                <a href="/Leaderboard" class="action-btn info">
+                    <i class="bi bi-trophy-fill"></i>
+                    <div>
+                        <strong>Leaderboard</strong>
+                        <span>See your rank</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row: Recent Activity & Enrollments -->
+    <div class="bottom-row">
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>Recent Activity</h3>
+                <a href="/DailyQuiz" class="view-all">View All →</a>
+            </div>
+            <div class="activity-list">
+                @if (ViewBag.RecentActivity != null)
+                {
+                    var activities = ViewBag.RecentActivity as List<dynamic>;
+                    if (activities != null && activities.Any())
+                    {
+                        foreach (var activity in activities)
+                        {
+                            <div class="activity-item">
+                                <div class="activity-avatar @(activity.Passed ? "passed" : "failed")">
+                                    <i class="bi bi-@(activity.Passed ? "check-circle-fill" : "x-circle-fill")"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-name">@activity.Title</div>
+                                    <div class="activity-meta">@activity.Description</div>
+                                </div>
+                                <div class="activity-date">@activity.Date.ToString("MMM dd")</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No recent activity</div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- My Enrollments -->
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>My Enrollments</h3>
+                <a href="/MySubjects" class="view-all">View All →</a>
+            </div>
+            <div class="activity-list">
+                @if (ViewBag.Enrollments != null)
+                {
+                    var enrollments = ViewBag.Enrollments as List<LUMEN.Models.Enrollment>;
+                    if (enrollments != null && enrollments.Any())
+                    {
+                        foreach (var enrollment in enrollments.Take(5))
+                        {
+                            <div class="activity-item">
+                                <div class="activity-avatar">
+                                    <i class="bi bi-book-fill"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-name">@enrollment.Subject?.Title</div>
+                                    <div class="activity-meta">@enrollment.Subject?.Category</div>
+                                </div>
+                                <div class="activity-badge">@enrollment.EnrolledAt.ToString("MMM dd")</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No enrollments yet</div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- My Badges -->
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>My Badges</h3>
+                <a href="/Badges" class="view-all">View All →</a>
+            </div>
+            <div class="badges-grid">
+                @if (ViewBag.Badges != null)
+                {
+                    var badges = ViewBag.Badges as List<LUMEN.Models.UserBadge>;
+                    if (badges != null && badges.Any())
+                    {
+                        foreach (var badge in badges.Take(6))
+                        {
+                            <div class="badge-item">
+                                <div class="badge-icon">
+                                    <i class="bi bi-award-fill"></i>
+                                </div>
+                                <div class="badge-name">@badge.Badge?.Name</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No badges yet. Keep learning!</div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .student-dashboard { max-width: 1400px; margin: 0 auto; }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+    }
+    
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1E1E2E;
+        margin-bottom: 0.25rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dashboard-subtitle {
+        color: #6b6b6b;
+        font-size: 0.95rem;
+    }
+    
+    .streak-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* KPI Cards */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .kpi-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+    }
+    
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    .kpi-card.primary { border-left-color: #C65D3E; }
+    .kpi-card.success { border-left-color: #7A8B5C; }
+    .kpi-card.warning { border-left-color: #F59E0B; }
+    .kpi-card.info { border-left-color: #3B82F6; }
+    
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .kpi-card.primary .kpi-icon { background: rgba(198, 93, 62, 0.1); color: #C65D3E; }
+    .kpi-card.success .kpi-icon { background: rgba(122, 139, 92, 0.1); color: #7A8B5C; }
+    .kpi-card.warning .kpi-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+    .kpi-card.info .kpi-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+    
+    .kpi-content {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .kpi-label {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1E1E2E;
+        line-height: 1.2;
+    }
+    
+    .kpi-trend {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+    }
+    
+    .kpi-trend.positive { color: #2E7D32; }
+    
+    /* Charts */
+    .charts-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1E1E2E;
+    }
+    
+    .chart-period {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        background: #f5f5f5;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+    }
+    
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+    
+    /* Metrics */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 1rem 0;
+    }
+    
+    .metric-item {
+        text-align: center;
+    }
+    
+    .metric-circle {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1rem;
+    }
+    
+    .circular-chart {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 250px;
+    }
+    
+    .circle-bg {
+        fill: none;
+        stroke: #f5f5f5;
+        stroke-width: 3;
+    }
+    
+    .circle {
+        fill: none;
+        stroke: #C65D3E;
+        stroke-width: 3;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s ease;
+    }
+    
+    .circle.avg {
+        stroke: #7A8B5C;
+    }
+    
+    .metric-value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1E1E2E;
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        color: #6b6b6b;
+        font-weight: 500;
+    }
+    
+    /* Subject Progress */
+    .subject-progress-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .progress-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .progress-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1E1E2E;
+    }
+    
+    .progress-percent {
+        font-size: 0.85rem;
+        color: #C65D3E;
+        font-weight: 600;
+    }
+    
+    .progress-bar {
+        height: 8px;
+        background: #f5f5f5;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #C65D3E, #7A8B5C);
+        border-radius: 4px;
+        transition: width 1s ease;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .action-btn i {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+    
+    .action-btn.primary { background: rgba(198, 93, 62, 0.1); }
+    .action-btn.primary i { background: #C65D3E; color: white; }
+    .action-btn.success { background: rgba(122, 139, 92, 0.1); }
+    .action-btn.success i { background: #7A8B5C; color: white; }
+    .action-btn.warning { background: rgba(245, 158, 11, 0.1); }
+    .action-btn.warning i { background: #F59E0B; color: white; }
+    .action-btn.info { background: rgba(59, 130, 246, 0.1); }
+    .action-btn.info i { background: #3B82F6; color: white; }
+    
+    .action-btn:hover {
+        transform: translateX(5px);
+    }
+    
+    .action-btn strong {
+        display: block;
+        color: #1E1E2E;
+        font-size: 0.95rem;
+    }
+    
+    .action-btn span {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+    }
+    
+    /* Activity Cards */
+    .bottom-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .activity-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .card-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-header-custom h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1E1E2E;
+    }
+    
+    .view-all {
+        color: #C65D3E;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .view-all:hover { text-decoration: underline; }
+    
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+    
+    .activity-item:hover { background: #f5f5f5; }
+    
+    .activity-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(198, 93, 62, 0.1);
+        color: #C65D3E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .activity-avatar.passed { background: rgba(46, 125, 50, 0.1); color: #2E7D32; }
+    .activity-avatar.failed { background: rgba(220, 38, 38, 0.1); color: #DC2626; }
+    
+    .activity-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .activity-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1E1E2E;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .activity-meta {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .activity-date {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+    }
+    
+    .activity-badge {
+        background: #F0E8D5;
+        color: #1E1E2E;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #6b6b6b;
+        font-size: 0.9rem;
+    }
+    
+    /* Badges Grid */
+    .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .badge-item {
+        text-align: center;
+        padding: 1rem;
+        background: #FAF6ED;
+        border-radius: 8px;
+    }
+    
+    .badge-icon {
+        font-size: 2rem;
+        color: #F59E0B;
+        margin-bottom: 0.5rem;
+    }
+    
+    .badge-name {
+        font-size: 0.75rem;
+        color: #1E1E2E;
+        font-weight: 600;
+    }
+    
+    @@media (max-width: 1200px) {
+        .charts-row { grid-template-columns: 1fr; }
+        .bottom-row { grid-template-columns: 1fr; }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const colors = {
+            primary: '#C65D3E',
+            primaryLight: 'rgba(198, 93, 62, 0.1)',
+            secondary: '#7A8B5C',
+            secondaryLight: 'rgba(122, 139, 92, 0.1)'
+        };
+
+        // XP Chart
+        const xpCtx = document.getElementById('xpChart');
+        if (xpCtx) {
+            const xpData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.XPOverTime));
+            const labels = xpData.map(d => {
+                const date = new Date(d.date + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            const values = xpData.map(d => d.xp);
+
+            new Chart(xpCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'XP Earned',
+                        data: values,
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primaryLight,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: colors.primary,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    </script>
+}

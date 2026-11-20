@@ -1,0 +1,810 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="admin-dashboard">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back! Here's what's happening with LUMEN today.</p>
+        </div>
+        <div class="header-actions">
+            <span class="live-indicator">
+                <span class="live-dot"></span>
+                @ViewBag.OnlineUsers users online
+            </span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card primary">
+            <div class="kpi-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Total Users</span>
+                <span class="kpi-value">@ViewBag.TotalUsers</span>
+                <span class="kpi-trend positive">
+                    <i class="bi bi-arrow-up"></i> Active accounts
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card success">
+            <div class="kpi-icon">
+                <i class="bi bi-book-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Subjects</span>
+                <span class="kpi-value">@ViewBag.TotalSubjects</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-check-circle"></i> Available courses
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card warning">
+            <div class="kpi-icon">
+                <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Lessons</span>
+                <span class="kpi-value">@ViewBag.TotalLessons</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-bookmark"></i> Total content
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card info">
+            <div class="kpi-icon">
+                <i class="bi bi-question-circle-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Quizzes</span>
+                <span class="kpi-value">@ViewBag.TotalQuizzes</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-trophy"></i> Available quizzes
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card secondary">
+            <div class="kpi-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Enrollments</span>
+                <span class="kpi-value">@ViewBag.TotalEnrollments</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-graph-up"></i> Total enrollments
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card accent">
+            <div class="kpi-icon">
+                <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Quiz Attempts</span>
+                <span class="kpi-value">@ViewBag.TotalQuizAttempts</span>
+                <span class="kpi-trend">
+                    <i class="bi bi-bar-chart"></i> Total attempts
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-row">
+        <div class="chart-card large">
+            <div class="chart-header">
+                <h3>User Registration Trend</h3>
+                <span class="chart-period">Last 7 days</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="registrationChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Users by Category</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-row">
+        <div class="chart-card large">
+            <div class="chart-header">
+                <h3>Quiz Activity</h3>
+                <span class="chart-period">Last 7 days</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="quizChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Performance Metrics</h3>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle"
+                                stroke-dasharray="@ViewBag.PassRate, 100"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div class="metric-value">@ViewBag.PassRate%</div>
+                    </div>
+                    <div class="metric-label">Pass Rate</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle avg"
+                                stroke-dasharray="@ViewBag.AvgScore, 100"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div class="metric-value">@ViewBag.AvgScore%</div>
+                    </div>
+                    <div class="metric-label">Avg Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>Recent Registrations</h3>
+                <a href="/UserManagement" class="view-all">View All →</a>
+            </div>
+            <div class="activity-list">
+                @if (ViewBag.RecentUsers != null)
+                {
+                    var recentUsers = ViewBag.RecentUsers as List<dynamic>;
+                    if (recentUsers != null && recentUsers.Any())
+                    {
+                        foreach (var user in recentUsers)
+                        {
+                            <div class="activity-item">
+                                <div class="activity-avatar">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-name">@user.FirstName @user.LastName</div>
+                                    <div class="activity-meta">@user.Email</div>
+                                </div>
+                                <div class="activity-badge">@user.Category</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No recent registrations</div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>Recent Quiz Activity</h3>
+                <a href="/DailyQuiz" class="view-all">View All →</a>
+            </div>
+            <div class="activity-list">
+                @if (ViewBag.RecentAttempts != null)
+                {
+                    var recentAttempts = ViewBag.RecentAttempts as List<dynamic>;
+                    if (recentAttempts != null && recentAttempts.Any())
+                    {
+                        foreach (var attempt in recentAttempts)
+                        {
+                            <div class="activity-item">
+                                <div class="activity-avatar quiz">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-name">@attempt.UserName</div>
+                                    <div class="activity-meta">@attempt.QuizTitle</div>
+                                </div>
+                                <div class="activity-score">@attempt.Score pts</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No recent quiz attempts</div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="activity-card">
+            <div class="card-header-custom">
+                <h3>Top Subjects</h3>
+                <a href="/Subjects" class="view-all">View All →</a>
+            </div>
+            <div class="top-subjects-list">
+                @if (ViewBag.TopSubjects != null)
+                {
+                    var topSubjects = ViewBag.TopSubjects as List<dynamic>;
+                    if (topSubjects != null && topSubjects.Any())
+                    {
+                        var maxCount = topSubjects.Max(s => (int)s.Count);
+                        foreach (var subject in topSubjects)
+                        {
+                            var percentage = ((int)subject.Count * 100) / maxCount;
+                            <div class="top-subject-item">
+                                <div class="subject-info">
+                                    <div class="subject-name">@subject.Title</div>
+                                    <div class="subject-count">@subject.Count enrollments</div>
+                                </div>
+                                <div class="subject-bar">
+                                    <div class="subject-bar-fill" style="width: @percentage%"></div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">No enrollment data yet</div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-dashboard { max-width: 1400px; margin: 0 auto; }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+    }
+    
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1E1E2E;
+        margin-bottom: 0.25rem;
+    }
+    
+    .dashboard-subtitle {
+        color: #6b6b6b;
+        font-size: 0.95rem;
+    }
+    
+    .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #2E7D32;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    
+    /* KPI Cards */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .kpi-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+    }
+    
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    .kpi-card.primary { border-left-color: #C65D3E; }
+    .kpi-card.success { border-left-color: #7A8B5C; }
+    .kpi-card.warning { border-left-color: #F59E0B; }
+    .kpi-card.info { border-left-color: #3B82F6; }
+    .kpi-card.secondary { border-left-color: #1E1E2E; }
+    .kpi-card.accent { border-left-color: #C65D3E; }
+    
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .kpi-card.primary .kpi-icon { background: rgba(198, 93, 62, 0.1); color: #C65D3E; }
+    .kpi-card.success .kpi-icon { background: rgba(122, 139, 92, 0.1); color: #7A8B5C; }
+    .kpi-card.warning .kpi-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+    .kpi-card.info .kpi-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+    .kpi-card.secondary .kpi-icon { background: rgba(30, 30, 46, 0.1); color: #1E1E2E; }
+    .kpi-card.accent .kpi-icon { background: rgba(198, 93, 62, 0.1); color: #C65D3E; }
+    
+    .kpi-content {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .kpi-label {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1E1E2E;
+        line-height: 1.2;
+    }
+    
+    .kpi-trend {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+    }
+    
+    .kpi-trend.positive { color: #2E7D32; }
+    
+    /* Charts */
+    .charts-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1E1E2E;
+    }
+    
+    .chart-period {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        background: #f5f5f5;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+    }
+    
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+    
+    /* Metrics */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 1rem 0;
+    }
+    
+    .metric-item {
+        text-align: center;
+    }
+    
+    .metric-circle {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1rem;
+    }
+    
+    .circular-chart {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 250px;
+    }
+    
+    .circle-bg {
+        fill: none;
+        stroke: #f5f5f5;
+        stroke-width: 3;
+    }
+    
+    .circle {
+        fill: none;
+        stroke: #C65D3E;
+        stroke-width: 3;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s ease;
+    }
+    
+    .circle.avg {
+        stroke: #7A8B5C;
+    }
+    
+    .metric-value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1E1E2E;
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        color: #6b6b6b;
+        font-weight: 500;
+    }
+    
+    /* Activity Cards */
+    .bottom-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .activity-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .card-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-header-custom h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1E1E2E;
+    }
+    
+    .view-all {
+        color: #C65D3E;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .view-all:hover { text-decoration: underline; }
+    
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+    
+    .activity-item:hover { background: #f5f5f5; }
+    
+    .activity-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(198, 93, 62, 0.1);
+        color: #C65D3E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .activity-avatar.quiz {
+        background: rgba(122, 139, 92, 0.1);
+        color: #7A8B5C;
+    }
+    
+    .activity-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .activity-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1E1E2E;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .activity-meta {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .activity-badge {
+        background: #F0E8D5;
+        color: #1E1E2E;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .activity-score {
+        background: rgba(122, 139, 92, 0.1);
+        color: #7A8B5C;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #6b6b6b;
+        font-size: 0.9rem;
+    }
+    
+    /* Top Subjects */
+    .top-subjects-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .top-subject-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .subject-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .subject-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1E1E2E;
+    }
+    
+    .subject-count {
+        font-size: 0.8rem;
+        color: #6b6b6b;
+    }
+    
+    .subject-bar {
+        height: 6px;
+        background: #f5f5f5;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    
+    .subject-bar-fill {
+        height: 100%;
+        background: #C65D3E;
+        border-radius: 3px;
+        transition: width 1s ease;
+    }
+    
+    @@media (max-width: 1200px) {
+        .charts-row { grid-template-columns: 1fr; }
+        .bottom-row { grid-template-columns: 1fr; }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const colors = {
+            primary: '#C65D3E',
+            primaryLight: 'rgba(198, 93, 62, 0.1)',
+            secondary: '#7A8B5C',
+            secondaryLight: 'rgba(122, 139, 92, 0.1)',
+            navy: '#1E1E2E',
+            gray: '#6b6b6b'
+        };
+
+        // Registration Chart
+        const regCtx = document.getElementById('registrationChart');
+        if (regCtx) {
+            const regData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.RecentRegistrations));
+            const labels = regData.map(d => {
+                const date = new Date(d.date + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            const values = regData.map(d => d.count);
+
+            new Chart(regCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: values,
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primaryLight,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: colors.primary,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { stepSize: 1 }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Category Chart
+        const catCtx = document.getElementById('categoryChart');
+        if (catCtx) {
+            const catData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.UsersByCategory));
+            const labels = catData.map(d => d.category || 'Not Set');
+            const values = catData.map(d => d.count);
+
+            new Chart(catCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [colors.primary, colors.secondary, colors.navy],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 15, usePointStyle: true }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Quiz Activity Chart
+        const quizCtx = document.getElementById('quizChart');
+        if (quizCtx) {
+            const quizData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.RecentQuizAttempts));
+            const labels = quizData.map(d => {
+                const date = new Date(d.date + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            const values = quizData.map(d => d.count);
+
+            new Chart(quizCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quiz Attempts',
+                        data: values,
+                        backgroundColor: colors.secondary,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { stepSize: 1 }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Track activity
+        setInterval(() => {
+            fetch('/Home/TrackActivity', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        }, 30000);
+    </script>
+}

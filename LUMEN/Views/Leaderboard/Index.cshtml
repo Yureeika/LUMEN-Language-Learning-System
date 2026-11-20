@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Leaderboard";
+    Layout = "_StudentLayout";
+    var leaderboard = ViewBag.Leaderboard as List<dynamic>
+    ?? new List<dynamic>
+        ();
+        var currentUserId = ViewBag.CurrentUserId as string;
+        var currentUserRank = ViewBag.CurrentUserRank;
+        }
+
+        <div class="page-header">
+            <h1><i class="bi bi-trophy-fill" style="color: var(--terracotta);"></i> Leaderboard</h1>
+            <p>Top learners ranked by XP earned from quizzes and activities</p>
+        </div>
+
+        <!-- Your Rank -->
+        <div class="card-custom" style="background: var(--terracotta-light); border: 2px solid var(--terracotta);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 style="margin: 0;">Your Rank: #@currentUserRank</h3>
+                    <p style="margin: 0; color: var(--gray);">Keep learning to climb higher!</p>
+                </div>
+                <div style="font-size: 3rem; color: var(--terracotta);">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card-custom">
+            <h3>Top 100 Learners</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Student</th>
+                            <th>Category</th>
+                            <th>Total XP</th>
+                            <th>Quizzes Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in leaderboard)
+                        {
+                        var isCurrentUser = user.Id == currentUserId;
+                        <tr style="@(isCurrentUser ? " background: var(--terracotta-light); font-weight: 600;" : "" )">
+                            <td>
+                                @if (user.Rank == 1)
+                                {
+                                <span style="font-size: 1.5rem;">🥇</span>
+                                }
+                                else if (user.Rank == 2)
+                                {
+                                <span style="font-size: 1.5rem;"></span>
+                                }
+                                else if (user.Rank == 3)
+                                {
+                                <span style="font-size: 1.5rem;">🥉</span>
+                                }
+                                else
+                                {
+                                <span>#@user.Rank</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                        @(user.FirstName?.Substring(0, 1).ToUpper() ?? "U")
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">@(user.Nickname ?? $"{user.FirstName} {user.LastName}")</div>
+                                        @if (isCurrentUser)
+                                        {
+                                        <small style="color: var(--terracotta);">You</small>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge" style="background: var(--cream-dark); color: var(--navy);">@user.Category</span></td>
+                            <td><strong style="color: var(--terracotta);">@user.TotalXP XP</strong></td>
+                            <td>@user.QuizAttempts</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>

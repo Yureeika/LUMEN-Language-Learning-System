@@ -1,0 +1,164 @@
+﻿@model QuizViewModel
+
+@{
+    ViewData["Title"] = Model.Quiz.Title;
+}
+
+<div class="container mt-4 mb-5">
+
+    <!-- Quiz Header -->
+    <div class="mb-4">
+        <h1 class="fw-bold">@Model.Quiz.Title</h1>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Quiz.Description))
+        {
+            <p class="text-muted">
+                @Model.Quiz.Description
+            </p>
+        }
+
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-clock"></i>
+                <strong>Time Remaining:</strong>
+                <span id="timeRemaining">
+                    @Model.TimeLimitMinutes:00
+                </span>
+            </div>
+
+            <div>
+                <strong>Total Questions:</strong>
+                @Model.Questions.Count
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Form -->
+    <form asp-controller="DailyQuiz"
+          asp-action="Submit"
+          method="post"
+          id="quizForm">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="QuizId"
+               value="@Model.Quiz.Id" />
+
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            var q = Model.Questions[i];
+
+            <div class="card mb-4 shadow-sm">
+
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+
+                    <strong>
+                        Question @(i + 1)
+                    </strong>
+
+                    <span class="badge bg-primary">
+                        @q.Points point@(q.Points == 1 ? "" : "s")
+                    </span>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h5 class="mb-4">
+                        @q.QuestionText
+                    </h5>
+
+                    <!-- Option A -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="Answers[@q.Id]"
+                               value="A"
+                               id="q@(q.Id)_a" />
+
+                        <label class="form-check-label"
+                               for="q@(q.Id)_a">
+                            <strong>A.</strong>
+                            @q.OptionA
+                        </label>
+                    </div>
+
+                    <!-- Option B -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="Answers[@q.Id]"
+                               value="B"
+                               id="q@(q.Id)_b" />
+
+                        <label class="form-check-label"
+                               for="q@(q.Id)_b">
+                            <strong>B.</strong>
+                            @q.OptionB
+                        </label>
+                    </div>
+
+                    <!-- Option C -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="Answers[@q.Id]"
+                               value="C"
+                               id="q@(q.Id)_c" />
+
+                        <label class="form-check-label"
+                               for="q@(q.Id)_c">
+                            <strong>C.</strong>
+                            @q.OptionC
+                        </label>
+                    </div>
+
+                    <!-- Option D -->
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="Answers[@q.Id]"
+                               value="D"
+                               id="q@(q.Id)_d" />
+
+                        <label class="form-check-label"
+                               for="q@(q.Id)_d">
+                            <strong>D.</strong>
+                            @q.OptionD
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+        <!-- Submit -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+
+            <div class="text-muted">
+                <i class="bi bi-info-circle"></i>
+                Answer all questions before submitting.
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-check-circle"></i>
+                Submit Quiz
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+
+    <script src="~/js/quiz.js"></script>
+
+    <script>
+        startQuizTimer(@Model.TimeLimitMinutes);
+    </script>
+}

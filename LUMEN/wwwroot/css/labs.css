@@ -1,0 +1,32 @@
+﻿.lab-container {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.code-editor {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.output-console {
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    padding: 1rem;
+    border-radius: 6px;
+    min-height: 200px;
+    overflow-y: auto;
+}
+
+.exercise-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+    .exercise-card .card-body {
+        padding: 2rem;
+    }

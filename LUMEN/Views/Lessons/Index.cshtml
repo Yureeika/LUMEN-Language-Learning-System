@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Lesson>
+
+@{
+    Layout = User.IsInRole("SuperAdmin")
+        ? "~/Views/Shared/_AdminLayout.cshtml"
+        : "~/Views/Shared/_Layout.cshtml";
+
+    ViewData["Title"] = "Lessons";
+    var subjectId = ViewBag.SubjectId;
+}
+    <style>
+    .btn-add-lesson {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.2rem;
+        background: #C65D3E;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 3px 8px rgba(198, 93, 62, 0.25);
+        transition: all 0.2s ease;
+    }
+
+    .btn-add-lesson:hover {
+        background: #A84A2E;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(198, 93, 62, 0.35);
+    }
+
+    .btn-add-lesson i {
+        font-size: 1rem;
+    }
+</style>
+
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lessons</h1>
+            @if (User.IsInRole("SuperAdmin"))
+{
+    <a asp-action="Create"
+   asp-route-subjectId="@ViewBag.SubjectId"
+   class="btn btn-terracotta">
+    <i class="bi bi-plus-circle"></i> Add Lesson
+</a>
+}
+        </div>
+
+        <div class="list-group">
+            @foreach (var lesson in Model)
+            {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">@lesson.Title</h5>
+                    <small class="text-muted">Order: @lesson.OrderIndex</small>
+                </div>
+                <div>
+    <a asp-action="Details"
+       asp-route-id="@lesson.Id"
+       class="btn btn-sm btn-info">
+        <i class="bi bi-eye"></i> View
+    </a>
+
+    @if (User.IsInRole("SuperAdmin"))
+    {
+        <a asp-action="Edit"
+           asp-route-id="@lesson.Id"
+           class="btn btn-sm btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+    }
+</div>
+            </div>
+            }
+        </div>
+    </div>

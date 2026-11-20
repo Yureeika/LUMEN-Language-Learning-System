@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Welcome to LUMEN!</h1>
+        <p>Your personalized learning journey starts here.</p>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card terracotta">
+                <h6><i class="bi bi-lightning-fill"></i> Total XP</h6>
+                <p class="display-5">0</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card olive">
+                <h6><i class="bi bi-book-fill"></i> Enrolled</h6>
+                <p class="display-5">0</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card terracotta">
+                <h6><i class="bi bi-award-fill"></i> Badges</h6>
+                <p class="display-5">0</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card olive">
+                <h6><i class="bi bi-fire"></i> Streak</h6>
+                <p class="display-5">1</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Continue Learning -->
+    <div class="mb-4">
+        <h3 style="font-weight: 700; margin-bottom: 1.5rem;">Continue Learning</h3>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 50px; height: 50px; background-color: var(--terracotta); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cream);">
+                            <i class="bi bi-code-slash" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 style="font-weight: 700; margin: 0;">C# Programming</h5>
+                            <small style="color: var(--gray);">CODING</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small style="color: var(--gray);">0/3 Lessons</small>
+                        <small style="color: var(--gray);">Just started</small>
+                    </div>
+                    <a href="/Subjects" class="btn btn-primary mt-3">Resume Course</a>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 50px; height: 50px; background-color: var(--olive); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cream);">
+                            <i class="bi bi-translate" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 style="font-weight: 700; margin: 0;">Spanish</h5>
+                            <small style="color: var(--gray);">LANGUAGES</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar olive" style="width: 0%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small style="color: var(--gray);">0/3 Lessons</small>
+                        <small style="color: var(--gray);">Just started</small>
+                    </div>
+                    <a href="/Subjects" class="btn btn-olive mt-3">Resume Course</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommended & Charts -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card p-4">
+                <h4 style="font-weight: 700; margin-bottom: 1.5rem;">Recommended For You</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="subject-card">
+                            <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400" alt="C#" />
+                            <div class="p-3">
+                                <h5 style="font-weight: 700;">C# Programming</h5>
+                                <p style="color: var(--gray); font-size: 0.9rem;">Master C# from basics to advanced</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-star-fill" style="color: var(--terracotta);"></i>
+                                        <strong>4.8</strong>
+                                        <small style="color: var(--gray);">(128)</small>
+                                    </div>
+                                    <a href="/Subjects" class="btn btn-primary btn-sm">Explore</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="subject-card">
+                            <img src="https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=400" alt="Spanish" />
+                            <div class="p-3">
+                                <h5 style="font-weight: 700;">Spanish</h5>
+                                <p style="color: var(--gray); font-size: 0.9rem;">Learn Spanish from beginner to advanced</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-star-fill" style="color: var(--terracotta);"></i>
+                                        <strong>4.9</strong>
+                                        <small style="color: var(--gray);">(256)</small>
+                                    </div>
+                                    <a href="/Subjects" class="btn btn-olive btn-sm">Explore</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card p-4 mb-3">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;">Weekly Activity</h5>
+                <canvas id="weeklyChart" height="200"></canvas>
+            </div>
+            <div class="card p-4">
+                <h5 style="font-weight: 700; margin-bottom: 1rem;">Quick Stats</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color: var(--gray);">Quizzes Taken</span>
+                    <strong>0</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color: var(--gray);">Hours Studied</span>
+                    <strong>0</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color: var(--gray);">Current Level</span>
+                    <strong>1</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span style="color: var(--gray);">Rank</span>
+                    <strong>#1</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const ctx = document.getElementById('weeklyChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'XP Earned',
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        backgroundColor: '#C65D3E',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F0E8D5' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    </script>
+}

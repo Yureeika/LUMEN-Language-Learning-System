@@ -1,0 +1,347 @@
+﻿@model LUMEN.Models.Quiz
+
+@{
+    Layout = "~/Views/Shared/_Student_layout.cshtml";
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4 mb-5">
+
+    <!-- Quiz Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>@Model.Title</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="text-muted mb-0">
+                    @Model.Description
+                </p>
+            }
+        </div>
+
+        <div class="text-end">
+            <div class="text-muted small">
+                Time Remaining
+            </div>
+
+            <div id="timer"
+                 class="fw-bold fs-4 text-primary">
+                @Model.TimeLimitMinutes:00
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Quiz Information -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <strong>Lesson</strong>
+                    <div>
+                        @(Model.Lesson?.Title ?? "Lesson")
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Questions</strong>
+                    <div>
+                        @Model.Questions.Count
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Passing Score</strong>
+                    <div>
+                        @Model.PassingScore%
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Quiz Form -->
+    <form id="quizForm"
+          asp-controller="Quizzes"
+          asp-action="Submit"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="quizId"
+               value="@Model.Id" />
+
+
+        @{
+            int questionNumber = 1;
+        }
+
+
+        @foreach (var question in Model.Questions.OrderBy(q => q.Id))
+        {
+            <div class="card mb-4 shadow-sm">
+
+                <div class="card-body">
+
+                    <!-- Question -->
+                    <h4 class="mb-4">
+                        Q@(questionNumber):
+                        @question.QuestionText
+                    </h4>
+
+
+                    <!-- Option A -->
+                    <div class="form-check mb-3">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="answers[@question.Id]"
+                               value="A"
+                               id="question_@(question.Id)_A" />
+
+                        <label class="form-check-label"
+                               for="question_@(question.Id)_A">
+
+                            <strong>A.</strong>
+                            @question.OptionA
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Option B -->
+                    <div class="form-check mb-3">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="answers[@question.Id]"
+                               value="B"
+                               id="question_@(question.Id)_B" />
+
+                        <label class="form-check-label"
+                               for="question_@(question.Id)_B">
+
+                            <strong>B.</strong>
+                            @question.OptionB
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Option C -->
+                    <div class="form-check mb-3">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="answers[@question.Id]"
+                               value="C"
+                               id="question_@(question.Id)_C" />
+
+                        <label class="form-check-label"
+                               for="question_@(question.Id)_C">
+
+                            <strong>C.</strong>
+                            @question.OptionC
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Option D -->
+                    <div class="form-check">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="answers[@question.Id]"
+                               value="D"
+                               id="question_@(question.Id)_D" />
+
+                        <label class="form-check-label"
+                               for="question_@(question.Id)_D">
+
+                            <strong>D.</strong>
+                            @question.OptionD
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            questionNumber++;
+        }
+
+
+        <!-- Submit -->
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <button type="submit"
+                        class="btn btn-primary btn-lg px-5">
+
+                    <i class="bi bi-check-circle"></i>
+                    Submit Quiz
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        // ============================================
+        // QUIZ TIMER
+        // ============================================
+
+        let totalSeconds =
+            @Model.TimeLimitMinutes * 60;
+
+        const timerElement =
+            document.getElementById("timer");
+
+        const quizForm =
+            document.getElementById("quizForm");
+
+
+        function updateTimer() {
+
+            const minutes =
+                Math.floor(totalSeconds / 60);
+
+            const seconds =
+                totalSeconds % 60;
+
+
+            timerElement.textContent =
+                minutes.toString().padStart(2, "0")
+                + ":"
+                + seconds.toString().padStart(2, "0");
+
+
+            if (totalSeconds <= 60) {
+
+                timerElement.classList.remove(
+                    "text-primary"
+                );
+
+                timerElement.classList.add(
+                    "text-danger"
+                );
+            }
+
+
+            if (totalSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                alert(
+                    "Time is up. Your quiz will be submitted."
+                );
+
+                quizForm.submit();
+
+                return;
+            }
+
+
+            totalSeconds--;
+        }
+
+
+        updateTimer();
+
+
+        const timerInterval =
+            setInterval(updateTimer, 1000);
+
+
+        // ============================================
+        // PREVENT ACCIDENTAL EMPTY SUBMISSION
+        // ============================================
+
+        quizForm.addEventListener(
+            "submit",
+            function (event) {
+
+                const questions =
+                    document.querySelectorAll(
+                        ".form-check-input"
+                    );
+
+
+                const questionIds =
+                    new Set();
+
+
+                questions.forEach(function (input) {
+
+                    questionIds.add(
+                        input.name
+                    );
+
+                });
+
+
+                let unanswered = 0;
+
+
+                questionIds.forEach(function (name) {
+
+                    const selected =
+                        document.querySelector(
+                            'input[name="' +
+                            name +
+                            '"]:checked'
+                        );
+
+
+                    if (!selected) {
+                        unanswered++;
+                    }
+
+                });
+
+
+                if (unanswered > 0) {
+
+                    const confirmed =
+                        confirm(
+                            "You have " +
+                            unanswered +
+                            " unanswered question(s). " +
+                            "Do you want to submit anyway?"
+                        );
+
+
+                    if (!confirmed) {
+                        event.preventDefault();
+                    }
+                }
+
+            }
+        );
+
+    </script>
+
+}

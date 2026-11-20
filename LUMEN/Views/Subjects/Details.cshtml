@@ -1,0 +1,175 @@
+﻿@model LUMEN.Models.Subject
+@{
+    ViewData["Title"] = Model.Title;
+    var isAdmin = ViewBag.IsAdmin as bool? ?? false;
+    var enrollmentCount = ViewBag.EnrollmentCount as int? ?? 0;
+    var isEnrolled = ViewBag.IsEnrolled as bool? ?? false;
+    Layout = isAdmin ? "_AdminLayout" : "_StudentLayout";
+}
+
+<div class="subject-details-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/Subjects"><i class="bi bi-arrow-left"></i> Back to Subjects</a>
+    </div>
+
+    <div class="details-grid">
+        <!-- Left: Image & Info -->
+        <div class="details-main">
+            <div class="details-image">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="@Model.Title" />
+                }
+                else
+                {
+                    <div class="image-placeholder">
+                        <i class="bi bi-book"></i>
+                    </div>
+                }
+                <div class="image-badges">
+                    <span class="level-badge @Model.Level.ToLower()">@Model.Level</span>
+                    @if (Model.Price == 0)
+                    {
+                        <span class="price-badge free">FREE</span>
+                    }
+                    else
+                    {
+                        <span class="price-badge paid">$@Model.Price</span>
+                    }
+                </div>
+            </div>
+
+            <div class="details-content">
+                <span class="category-tag">@Model.Category</span>
+                <h1 class="details-title">@Model.Title</h1>
+                <p class="details-description">@Model.Description</p>
+
+                <div class="details-stats">
+                    <div class="stat">
+                        <i class="bi bi-people-fill"></i>
+                        <span>@enrollmentCount enrolled</span>
+                    </div>
+                    <div class="stat">
+                        <i class="bi bi-clock"></i>
+                        <span>Created @Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+
+                @if (isEnrolled)
+                {
+                    <div class="enrolled-notice">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>You are enrolled in this course</span>
+                    </div>
+                }
+                else if (!isAdmin)
+                {
+                    <form action="/Subjects/Enroll" method="post" class="enroll-form">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn-enroll-large">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            @(Model.Price > 0 ? $"Enroll Now - $@Model.Price" : "Enroll Free")
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+
+        <!-- Right: Sidebar -->
+        <div class="details-sidebar">
+            <div class="sidebar-card">
+                <h3>Course Info</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">Category</span>
+                        <span class="info-value">@Model.Category</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Level</span>
+                        <span class="info-value">@Model.Level</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Price</span>
+                        <span class="info-value @(Model.Price == 0 ? "free" : "paid")">
+                            @(Model.Price == 0 ? "Free" : $"${Model.Price}")
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="info-value @(Model.IsActive ? "active" : "inactive")">
+                            @(Model.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            @if (isAdmin)
+            {
+                <div class="sidebar-card admin-actions">
+                    <h3>Admin Actions</h3>
+                    <a href="/Subjects/Edit/@Model.Id" class="btn-admin edit">
+                        <i class="bi bi-pencil"></i> Edit Subject
+                    </a>
+                    <form action="/Subjects/Delete/@Model.Id" method="post" onsubmit="return confirm('Delete this subject?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-admin delete">
+                            <i class="bi bi-trash"></i> Delete Subject
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .subject-details-page { max-width: 1200px; margin: 0 auto; }
+    .breadcrumb { margin-bottom: 1.5rem; }
+    .breadcrumb a { color: #C65D3E; text-decoration: none; font-weight: 600; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .details-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    .details-image { height: 400px; border-radius: 12px; overflow: hidden; position: relative; margin-bottom: 1.5rem; }
+    .details-image img { width: 100%; height: 100%; object-fit: cover; }
+    .image-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #C65D3E, #7A8B5C); display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem; }
+    .image-badges { position: absolute; top: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between; }
+    .level-badge { padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+    .level-badge.basic { background: #7A8B5C; color: white; }
+    .level-badge.intermediate { background: #F59E0B; color: white; }
+    .level-badge.advanced { background: #C65D3E; color: white; }
+    .price-badge { padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; }
+    .price-badge.free { background: #2E7D32; color: white; }
+    .price-badge.paid { background: #1E1E2E; color: white; }
+    .category-tag { display: inline-block; background: #FAF6ED; color: #1E1E2E; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 1rem; }
+    .details-title { font-size: 2rem; font-weight: 700; color: #1E1E2E; margin-bottom: 1rem; }
+    .details-description { color: #6b6b6b; font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .details-stats { display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .stat { display: flex; align-items: center; gap: 0.5rem; color: #6b6b6b; font-size: 0.9rem; }
+    .stat i { color: #C65D3E; }
+    .enrolled-notice { background: rgba(46, 125, 50, 0.1); color: #2E7D32; padding: 1rem 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 0.75rem; font-weight: 600; }
+    .enroll-form { margin-top: 1rem; }
+    .btn-enroll-large { width: 100%; padding: 1rem; background: #C65D3E; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: all 0.3s; }
+    .btn-enroll-large:hover { background: #A84A2E; }
+    .sidebar-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 1.5rem; }
+    .sidebar-card h3 { font-size: 1.1rem; font-weight: 600; color: #1E1E2E; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f5f5f5; }
+    .info-list { display: flex; flex-direction: column; gap: 1rem; }
+    .info-item { display: flex; justify-content: space-between; align-items: center; }
+    .info-label { color: #6b6b6b; font-size: 0.9rem; }
+    .info-value { font-weight: 600; color: #1E1E2E; }
+    .info-value.free { color: #2E7D32; }
+    .info-value.paid { color: #C65D3E; }
+    .info-value.active { color: #2E7D32; }
+    .info-value.inactive { color: #DC2626; }
+    .admin-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+    .btn-admin { padding: 0.75rem; border-radius: 6px; text-decoration: none; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: none; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+    .btn-admin.edit { background: rgba(122, 139, 92, 0.1); color: #7A8B5C; }
+    .btn-admin.edit:hover { background: rgba(122, 139, 92, 0.2); }
+    .btn-admin.delete { background: rgba(220, 38, 38, 0.1); color: #DC2626; }
+    .btn-admin.delete:hover { background: rgba(220, 38, 38, 0.2); }
+    @@media (max-width: 768px) {
+        .details-grid { grid-template-columns: 1fr; }
+        .details-image { height: 250px; }
+        .details-title { font-size: 1.5rem; }
+    }
+</style>

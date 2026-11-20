@@ -1,0 +1,210 @@
+﻿@model LUMEN.Models.DailyTrack
+@{
+    ViewData["Title"] = "Daily Track";
+    var todayQuizzes = ViewBag.TodayQuizzes as List<LUMEN.Models.QuizAttempt> ?? new List<LUMEN.Models.QuizAttempt>();
+    var todayBookmarks = ViewBag.TodayBookmarks as List<LUMEN.Models.Bookmark> ?? new List<LUMEN.Models.Bookmark>();
+    var todayNotes = ViewBag.TodayNotes as List<LUMEN.Models.Note> ?? new List<LUMEN.Models.Note>();
+    var todayLabSessions = ViewBag.TodayLabSessions as List<LUMEN.Models.VirtualLabSession> ?? new List<LUMEN.Models.VirtualLabSession>();
+    var last7Days = ViewBag.Last7Days as List<LUMEN.Models.DailyTrack> ?? new List<LUMEN.Models.DailyTrack>();
+}
+
+<div class="container mt-4">
+    <h1><i class="bi bi-calendar-check"></i> Daily Track</h1>
+    <p class="text-muted">Track your learning progress for <strong>@Model.TrackDate.ToString("dddd, MMMM dd, yyyy")</strong></p>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h6 class="card-title">XP Earned Today</h6>
+                    <p class="card-text display-5 fw-bold">@Model.XPEarned</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h6 class="card-title">Quizzes Taken</h6>
+                    <p class="card-text display-5 fw-bold">@Model.QuizzesTaken</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h6 class="card-title">Lessons Completed</h6>
+                    <p class="card-text display-5 fw-bold">@Model.LessonsCompleted</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h6 class="card-title">Total Activities</h6>
+                    <p class="card-text display-5 fw-bold">@(todayQuizzes.Count + todayBookmarks.Count + todayNotes.Count + todayLabSessions.Count)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Today's Activities -->
+        <div class="col-md-8">
+            <!-- Quizzes -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-question-circle"></i> Quizzes Taken Today (@todayQuizzes.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (todayQuizzes.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var quiz in todayQuizzes)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">@quiz.Quiz?.Title</h6>
+                                        <span class="badge @(quiz.Passed ? "bg-success" : "bg-danger")">@(quiz.Passed ? "Passed" : "Failed")</span>
+                                    </div>
+                                    <p class="mb-1">Score: @quiz.Score / @quiz.TotalPoints (@((quiz.Score * 100 / Math.Max(1, quiz.TotalPoints)))%)</p>
+                                    <small class="text-muted">@quiz.CompletedAt?.ToString("HH:mm")</small>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No quizzes taken today.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Bookmarks -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-bookmark"></i> Bookmarks Created Today (@todayBookmarks.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (todayBookmarks.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var bookmark in todayBookmarks)
+                            {
+                                <li class="list-group-item">@bookmark.Lesson?.Title</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No bookmarks created today.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-journal-text"></i> Notes Created Today (@todayNotes.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (todayNotes.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var note in todayNotes)
+                            {
+                                <div class="list-group-item">
+                                    <h6 class="mb-1">@note.Lesson?.Title</h6>
+                                    <p class="mb-1 small">@note.Content.Substring(0, Math.Min(100, note.Content.Length))...</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No notes created today.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Lab Sessions -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-code-slash"></i> Lab Sessions Today (@todayLabSessions.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (todayLabSessions.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var session in todayLabSessions)
+                            {
+                                <li class="list-group-item">
+                                    <strong>@session.LabType</strong> - XP Earned: @session.XPEarned
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No lab sessions today.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Last 7 Days Chart -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> Last 7 Days</h5>
+                </div>
+                <div class="card-body">
+                    @if (last7Days.Any())
+                    {
+                        <canvas id="weeklyChart" width="400" height="300"></canvas>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No data for the last 7 days.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        @if (last7Days.Any())
+        {
+            var labels = last7Days.Select(d => d.TrackDate.ToString("MMM dd")).ToArray();
+            var data = last7Days.Select(d => d.XPEarned).ToArray();
+            <text>
+            const ctx = document.getElementById('weeklyChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(labels)),
+                        datasets: [{
+                            label: 'XP Earned',
+                            data: @Html.Raw(Json.Serialize(data)),
+                            backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                            borderColor: 'rgb(13, 110, 253)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+            </text>
+        }
+    </script>
+}

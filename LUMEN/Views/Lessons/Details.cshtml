@@ -1,0 +1,70 @@
+﻿@model Lesson
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+
+            <li class="breadcrumb-item">
+                <a asp-controller="Subjects"
+                   asp-action="Index">
+                    Subjects
+                </a>
+            </li>
+
+            <li class="breadcrumb-item">
+                <a asp-controller="Subjects"
+                   asp-action="Details"
+                   asp-route-id="@Model.SubjectId">
+                    @Model.Subject.Title
+                </a>
+            </li>
+
+            <li class="breadcrumb-item active">
+                @Model.Title
+            </li>
+
+        </ol>
+    </nav>
+
+    <h1>@Model.Title</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+
+            @if (!string.IsNullOrEmpty(Model.VideoUrl))
+{
+    var videoUrl = Model.VideoUrl.Trim();
+
+    if (videoUrl.Contains("youtube.com/watch?v="))
+    {
+        var videoId = videoUrl.Split("v=")[1].Split('&')[0];
+        videoUrl = $"https://www.youtube.com/embed/{videoId}";
+    }
+    else if (videoUrl.Contains("youtu.be/"))
+    {
+        var videoId = videoUrl.Split("youtu.be/")[1].Split('?')[0];
+        videoUrl = $"https://www.youtube.com/embed/{videoId}";
+    }
+
+    <div class="ratio ratio-16x9 mb-4">
+        <iframe src="@videoUrl"
+                title="Lesson Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+        </iframe>
+    </div>
+}
+
+            <div class="lesson-content">
+                @Html.Raw(Model.Content)
+            </div>
+
+        </div>
+    </div>
+
+</div>

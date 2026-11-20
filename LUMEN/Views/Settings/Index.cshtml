@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <div class="mb-4">
+        <h1 class="fw-bold">Settings</h1>
+        <p class="text-muted">Manage your LUMEN system settings.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">System Settings</h4>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Application Name</label>
+                <input type="text"
+                       class="form-control"
+                       value="LUMEN"
+                       disabled />
+                <small class="text-muted">
+                    The name of the learning management system.
+                </small>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">System Status</label>
+                <div>
+                    <span class="badge bg-success">System Online</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">User Registration</label>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="registrationSwitch"
+                           checked />
+
+                    <label class="form-check-label" for="registrationSwitch">
+                        Allow new users to register
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Maintenance Mode</label>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="maintenanceSwitch" />
+
+                    <label class="form-check-label" for="maintenanceSwitch">
+                        Enable maintenance mode
+                    </label>
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    onclick="saveSettings()">
+                <i class="bi bi-save me-1"></i>
+                Save Settings
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function saveSettings() {
+            alert("Settings saved successfully.");
+        }
+    </script>
+}

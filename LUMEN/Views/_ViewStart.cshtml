@@ -1,0 +1,30 @@
+﻿@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    bool isAdmin =
+        User.IsInRole("SuperAdmin") ||
+        User.IsInRole("Admin");
+
+    var adminControllers = new[]
+    {
+        "Lessons",
+        "Announcements",
+        "AuditLog",
+        "UserManagement",
+        "Settings",
+        "Reports"
+    };
+
+    if (isAdmin && adminControllers.Contains(controller))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (User.Identity?.IsAuthenticated == true)
+    {
+        Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
